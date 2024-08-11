@@ -1,0 +1,35 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ */
+package dsa.assignment;
+
+/**
+ *
+ * @author LEE CHUN YIN
+ */
+public interface SortedDoublyLinkedListInterface<T> {
+
+    public void add(T object);
+    
+    public void edit(T object);
+
+    public void remove(T object);
+    
+    public boolean contain(T object);
+    
+    public T find(T object);
+    
+    public void display();
+    
+    public void sort(String sortTarget, boolean asc);
+    
+    public void clear();
+
+    public int size();
+
+    public boolean isEmpty();
+    
+    public void generateReport();
+   
+}
