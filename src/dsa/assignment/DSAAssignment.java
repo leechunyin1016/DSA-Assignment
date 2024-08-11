@@ -15,7 +15,7 @@ public class DSAAssignment {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        System.out.println("Testing 123");
+        System.out.println("Testing");
     }
     
 }
