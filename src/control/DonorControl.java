@@ -9,5 +9,5 @@ package control;
  * @author LEE CHUN YIN
  */
 public class DonorControl {
-    
+    //
 }

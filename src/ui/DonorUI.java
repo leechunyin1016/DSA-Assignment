@@ -9,5 +9,5 @@ package ui;
  * @author LEE CHUN YIN
  */
 public class DonorUI {
-    
+    //
 }
