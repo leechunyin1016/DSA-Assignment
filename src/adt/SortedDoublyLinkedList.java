@@ -66,9 +66,9 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
 
             }
 
-            size++;
-
         }
+        
+        size++;
 
     }
 
