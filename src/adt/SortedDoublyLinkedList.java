@@ -79,7 +79,45 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
 
     @Override
     public void remove(T object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+      if (head == null || object == null){
+          return;
+      }
+      
+      Node<T> current = head;
+      
+      // find the node to remove from list
+    while (current != null && current.data.compareTo(object) != 0) {
+        current = current.next;
+    }
+
+    // if the node are not found
+    if (current == null) {
+        return;
+    }
+
+    // if is head node to be delete
+    if (current == head) {
+        head = current.next;
+        if (head != null) {
+            head.prev = null;
+        } else {
+            tail = null;
+        }
+    } 
+    // if is tail node to be delete
+    else if (current == tail) {
+        tail = current.prev;
+        tail.next = null;
+    } 
+    // if is middle node to be delete
+    else {
+        current.prev.next = current.next;
+        current.next.prev = current.prev;
+    }
+
+    size--; 
+      
     }
 
     @Override
