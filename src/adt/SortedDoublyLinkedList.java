@@ -84,7 +84,26 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
 
     @Override
     public boolean contain(T object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Node<T> current = head;
+        
+        //if current != null, that mean the while loop havent reach to the end
+        while (current != null) {
+            //if compare To = 0, mean found the target 
+            if (current.data.compareTo(object) == 0) {
+                return true;
+            }
+            
+            //if already past the target search location, return false due
+            else if (current.data.compareTo(object) > 0) {
+                return false;
+            }
+            
+            //if not found then continue next
+            current = current.next;
+        }
+
+        //if not found then return null
+        return false;
     }
 
     @Override
