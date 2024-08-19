@@ -67,14 +67,45 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
             }
 
         }
-        
+
         size++;
 
     }
 
     @Override
-    public void edit(T object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void edit(T target, T newValue) {
+        Node<T> current = head;
+
+        // Find the node with the target value
+        while (current != null && !current.data.equals(target)) {
+            current = current.next;
+        }
+
+        if (current == null) {
+            // Target not found
+            System.out.println("The target value is not found in the list.");
+            return;
+        }
+
+        // Remove the node from the list
+        if (current.prev != null) {
+            current.prev.next = current.next;
+        } else {
+            // Removing the head node
+            head = current.next;
+        }
+
+        if (current.next != null) {
+            current.next.prev = current.prev;
+        } else {
+            // Removing the tail node
+            tail = current.prev;
+        }
+
+        size--;
+
+        // Add the new value to the list
+        add(newValue);
     }
 
     @Override

@@ -12,7 +12,7 @@ public interface SortedDoublyLinkedListInterface<T> {
 
     public void add(T object);
 
-    public void edit(T object);
+    public void edit(T target, T newValue);
 
     public void remove(T object);
 
