@@ -72,40 +72,40 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
 
     }
 
-    @Override
+    // Edit the data of an existing node
     public void edit(T target, T newValue) {
         Node<T> current = head;
-
-        // Find the node with the target value
         while (current != null && !current.data.equals(target)) {
             current = current.next;
         }
 
         if (current == null) {
-            // Target not found
-            System.out.println("The target value is not found in the list.");
+            System.out.println("The target donor is not found in the list.");
             return;
         }
 
-        // Remove the node from the list
-        if (current.prev != null) {
-            current.prev.next = current.next;
-        } else {
-            // Removing the head node
-            head = current.next;
+        // Update the data of the current node
+        current.data = newValue;
+
+        // To maintain order in a sorted list, we need to remove and re-add the node
+        // if the order might have changed
+        if (current.prev != null && current.prev.data.compareTo(newValue) > 0) {
+            // Node might have changed its position
+            if (current.prev != null) {
+                current.prev.next = current.next;
+            } else {
+                head = current.next;
+            }
+
+            if (current.next != null) {
+                current.next.prev = current.prev;
+            } else {
+                tail = current.prev;
+            }
+
+            size--;
+            add(newValue);
         }
-
-        if (current.next != null) {
-            current.next.prev = current.prev;
-        } else {
-            // Removing the tail node
-            tail = current.prev;
-        }
-
-        size--;
-
-        // Add the new value to the list
-        add(newValue);
     }
 
     @Override
