@@ -73,6 +73,26 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
     }
 
     @Override
+    public T getEntry(int position) {
+        // Check if position is valid
+        if (position < 0 || position >= size) {
+            throw new IndexOutOfBoundsException("Position out of bounds");
+        }
+
+        Node<T> current = head;
+        int index = 0;
+
+        // Traverse the list to the specified position
+        while (index < position) {
+            current = current.next;
+            index++;
+        }
+
+        // Return the data of the node at the specified position
+        return current.data;
+    }
+
+    @Override
     public void edit(T target, T newValue) {
         Node<T> current = head;
 
@@ -110,25 +130,59 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
 
     @Override
     public void remove(T object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+        if (head == null || object == null) {
+            return;
+        }
+
+        Node<T> current = head;
+
+        // find the node to remove from list
+        while (current != null && current.data.compareTo(object) != 0) {
+            current = current.next;
+        }
+
+        // if the node are not found
+        if (current == null) {
+            return;
+        }
+
+        // if is head node to be delete
+        if (current == head) {
+            head = current.next;
+            if (head != null) {
+                head.prev = null;
+            } else {
+                tail = null;
+            }
+        } // if is tail node to be delete
+        else if (current == tail) {
+            tail = current.prev;
+            tail.next = null;
+        } // if is middle node to be delete
+        else {
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+        }
+
+        size--;
+
     }
 
     @Override
     public boolean contain(T object) {
         Node<T> current = head;
-        
+
         //if current != null, that mean the while loop havent reach to the end
         while (current != null) {
             //if compare To = 0, mean found the target 
             if (current.data.compareTo(object) == 0) {
                 return true;
-            }
-            
-            //if already past the target search location, return false due
+            } //if already past the target search location, return false due
             else if (current.data.compareTo(object) > 0) {
                 return false;
             }
-            
+
             //if not found then continue next
             current = current.next;
         }

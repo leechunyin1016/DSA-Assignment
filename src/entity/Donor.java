@@ -14,32 +14,32 @@ public class Donor implements Comparable<Donor> {
     private String donorId;
     private String donorName;
     private String donorType;
-    private String phoneNo;
-    private String email;           
-    private String dob;
-    private int totalNumberOfDonation;
-    private String lastDonationDate;
+//    private String phoneNo;
+//    private String email;           
+//    private String dob;
+//    private int totalNumberOfDonation;
+//    private String lastDonationDate;
 
     public Donor() {
         this.donorId = generateDonorId();
         this.donorName = "";
         this.donorType = "";
-        this.phoneNo = "";
-        this.email = "";
-        this.dob = "";
-        this.totalNumberOfDonation = 0;
-        this.lastDonationDate = null;
+//        this.phoneNo = "";
+//        this.email = "";
+//        this.dob = "";
+//        this.totalNumberOfDonation = 0;
+//        this.lastDonationDate = null;
     }
 
-    public Donor(String name, double money, String donorType, String phoneNo, String email, String dob, int totalNumberOfDonation, String lastDonationDate) {
+    public Donor(String name, String donorType){// String phoneNo, String email, String dob, int totalNumberOfDonation, String lastDonationDate) {
         this.donorId = generateDonorId();
         this.donorName = name;
         this.donorType = donorType;
-        this.phoneNo = phoneNo;
-        this.email = email;
-        this.dob = dob;
-        this.totalNumberOfDonation = totalNumberOfDonation;
-        this.lastDonationDate = lastDonationDate;
+//        this.phoneNo = phoneNo;
+//        this.email = email;
+//        this.dob = dob;
+//        this.totalNumberOfDonation = totalNumberOfDonation;
+//        this.lastDonationDate = lastDonationDate;
 
     }
 
@@ -65,25 +65,25 @@ public class Donor implements Comparable<Donor> {
         this.donorType = donorType;
     }
 
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-
-    public void setTotalNumberOfDonation(int totalNumberOfDonation) {
-        this.totalNumberOfDonation = totalNumberOfDonation;
-    }
-
-    public void setLastDonationDate(String lastDonationDate) {
-        this.lastDonationDate = lastDonationDate;
-    }
+//    public void setPhoneNo(String phoneNo) {
+//        this.phoneNo = phoneNo;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
+//
+//    public void setDob(String dob) {
+//        this.dob = dob;
+//    }
+//
+//    public void setTotalNumberOfDonation(int totalNumberOfDonation) {
+//        this.totalNumberOfDonation = totalNumberOfDonation;
+//    }
+//
+//    public void setLastDonationDate(String lastDonationDate) {
+//        this.lastDonationDate = lastDonationDate;
+//    }
 
     public static int getIdCounter() {
         return idCounter;
@@ -101,34 +101,41 @@ public class Donor implements Comparable<Donor> {
         return donorType;
     }
 
-    public String getPhoneNo() {
-        return phoneNo;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getDob() {
-        return dob;
-    }
-
-    public int getTotalNumberOfDonation() {
-        return totalNumberOfDonation;
-    }
-
-    public String getLastDonationDate() {
-        return lastDonationDate;
-    }
+//    public String getPhoneNo() {
+//        return phoneNo;
+//    }
+//
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public String getDob() {
+//        return dob;
+//    }
+//
+//    public int getTotalNumberOfDonation() {
+//        return totalNumberOfDonation;
+//    }
+//
+//    public String getLastDonationDate() {
+//        return lastDonationDate;
+//    }
 
     @Override
     public int compareTo(Donor other) {
-        return this.donorName.compareTo(other.donorName);
+        return this.donorId.compareTo(other.donorId);
     }
+    
+    
+
+//    @Override
+//    public String toString() {
+//        return "donorId=" + donorId + ", donorName=" + donorName + ", donorType=" + donorType + ", phoneNo=" + phoneNo + ", email=" + email + ", dob=" + dob + ", totalNumberOfDonation=" + totalNumberOfDonation + ", lastDonationDate=" + lastDonationDate;
+//    }
 
     @Override
     public String toString() {
-        return "donorId=" + donorId + ", donorName=" + donorName + ", donorType=" + donorType + ", phoneNo=" + phoneNo + ", email=" + email + ", dob=" + dob + ", totalNumberOfDonation=" + totalNumberOfDonation + ", lastDonationDate=" + lastDonationDate;
+        return "Donor{" + "donorId=" + donorId + ", donorName=" + donorName + ", donorType=" + donorType + '}';
     }
 
 }

@@ -12,6 +12,8 @@ public interface SortedDoublyLinkedListInterface<T> {
 
     public void add(T object);
 
+    public T getEntry(int position);
+    
     public void edit(T target, T newValue);
 
     public void remove(T object);
