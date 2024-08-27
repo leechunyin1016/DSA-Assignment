@@ -4,7 +4,6 @@
  */
 package boundary;
 
-import control.DonorControl;
 import entity.Donor;
 import java.util.Scanner;
 
@@ -14,66 +13,53 @@ import java.util.Scanner;
  */
 public class DonorUI {
 
-    private DonorControl donorControl;
-    private Scanner scanner;
+    Scanner scanner = new Scanner(System.in);
 
-    public DonorUI(DonorControl donorControl) {
-        this.donorControl = donorControl;
-        scanner = new Scanner(System.in);
+    public int getDonorMenuChoice() {
+
+        System.out.println("\nDonor Management System");
+        System.out.println("1. Add Donor");
+        System.out.println("2. Remove Donor");
+        System.out.println("3. Update Donor Details");
+        System.out.println("4. Search Donor");
+        System.out.println("5. List All Donors");
+        System.out.println("6. Generate Donor Summary Report");
+        System.out.println("7. Exit");
+        System.out.print("Enter your choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        return choice;
     }
 
-    public void displayMenu() {
-        int choice;
-        do {
-            System.out.println("\nDonor Management System");
-            System.out.println("1. Add Donor");
-            System.out.println("2. Remove Donor");
-            System.out.println("3. Search Donor");
-            System.out.println("4. Update Donor Details");
-            System.out.println("5. List All Donors");
-            System.out.println("6. Exit");
-            System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 1:
-                    addDonor();
-                    break;
-                case 2:
-                    System.out.println("Remove Donor");
-                    //removeDonor();
-                    break;
-                case 3:
-                    System.out.println("Search Donor");
-                    //searchDonor();
-                    break;
-                case 4:
-                    System.out.println("Update Donor");
-                    //updateDonor();
-                    break;
-                case 5:
-                    listDonors();
-                    break;
-                case 6:
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-            }
-        } while (choice != 6);
+    public void printDonorDetails(Donor donor) {
+        System.out.println("Donor Details");
+        System.out.println("Donor ID:" + donor.getDonorId());
+        System.out.println("Donor Name: " + donor.getDonorName());
+        System.out.println("Donor Type: " + donor.getDonorType());
     }
 
-    private void addDonor() {
+    public Donor inputDonorDetails() {
+        String donorName = inputDonorName();
+        String donorType = inputDonorType();
+        return new Donor(donorName, donorType);
+    }
+
+    public String inputDonorId() {
+        System.out.print("Enter Donor ID: ");
+        String id = scanner.nextLine();
+        return id;
+    }
+
+    public String inputDonorName() {
         System.out.print("Enter Donor Name: ");
         String name = scanner.nextLine();
-        System.out.print("Enter Contact Info: ");
+        return name;
+    }
+
+    public String inputDonorType() {
+        System.out.print("Enter Donor Type: ");
         String type = scanner.nextLine();
-
-        Donor donor = new Donor(name, type);
-        donorControl.addDonor(donor);
+        return type;
     }
 
-    private void listDonors() {
-        donorControl.listAllDonors();
-    }
 }

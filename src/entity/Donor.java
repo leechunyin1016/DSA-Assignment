@@ -123,7 +123,7 @@ public class Donor implements Comparable<Donor> {
 
     @Override
     public int compareTo(Donor other) {
-        return this.donorName.compareTo(other.donorName);
+        return this.donorId.compareTo(other.donorId);
     }
     
     

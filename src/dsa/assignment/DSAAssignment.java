@@ -5,6 +5,7 @@
 package dsa.assignment;
 
 import adt.SortedDoublyLinkedList;
+import adt.SortedDoublyLinkedListInterface;
 import entity.Donor;
 
 /**
@@ -17,7 +18,7 @@ public class DSAAssignment {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        SortedDoublyLinkedList<Donor> mainDonorList = new SortedDoublyLinkedList<>();
+        SortedDoublyLinkedListInterface<Donor> mainDonorList = new SortedDoublyLinkedList<>();
 
         Donor donor = new Donor();
         donor.setDonorName("Lee");
