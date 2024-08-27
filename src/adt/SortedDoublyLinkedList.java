@@ -71,6 +71,27 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
         size++;
 
     }
+    
+    @Override
+    public T getEntry(int position) {
+    // Check if position is valid
+    if (position < 0 || position >= size) {
+        throw new IndexOutOfBoundsException("Position out of bounds");
+    }
+
+    Node<T> current = head;
+    int index = 0;
+
+    // Traverse the list to the specified position
+    while (index < position) {
+        current = current.next;
+        index++;
+    }
+
+    // Return the data of the node at the specified position
+    return current.data;
+}
+
 
     @Override
     public void edit(T target, T newValue) {
