@@ -4,7 +4,9 @@
  */
 package dsa.assignment;
 import adt.SortedDoublyLinkedList;
+import adt.SortedDoublyLinkedListInterface;
 import entity.Donor;
+import entity.Donation;
 
 /**
  *
@@ -17,7 +19,7 @@ public class DSAAssignment {
      */
     public static void main(String[] args) {
         SortedDoublyLinkedList<Donor> mainDonorList = new SortedDoublyLinkedList<>(); 
-        
+        SortedDoublyLinkedListInterface<Donation> donationList = new SortedDoublyLinkedList<>(); 
         Donor donor = new Donor();
         donor.setDonorName("Lee");
         mainDonorList.add(donor);
@@ -26,7 +28,16 @@ public class DSAAssignment {
         
         donor2.setDonorName("Mu");
         mainDonorList.add(donor2);
-
+        
+        Donation dn1 = new Donation();
+        dn1.setDonationId("abc123");
+        dn1.setDonationItem("nub");
+        dn1.setDonationItemQty(9);
+        dn1.setDonationdDonorName("NUBie");
+        dn1.setDonationDate("0914");
+        donationList.add(dn1);
+        donationList.display();
+        
         mainDonorList.display();
         System.out.println("size = "+mainDonorList.size());
 
