@@ -31,5 +31,7 @@ public interface SortedDoublyLinkedListInterface<T> {
     public void filter(String sortTarget, boolean asc);
 
     public void generateReport();
+    
+    public T getEntry(int position);
 
 }
