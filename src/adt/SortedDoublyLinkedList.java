@@ -4,6 +4,8 @@
  */
 package adt;
 
+import entity.Donation;
+
 /**
  *
  * @author LEE CHUN YIN
@@ -13,6 +15,7 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
     private Node<T> head;
     private Node<T> tail;
     private int size;
+
 
     //initial the default value once create
     public SortedDoublyLinkedList() {
@@ -200,9 +203,28 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
     }
 
     @Override
-    public void filter(String sortTarget, boolean asc) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void filter(String targetItem) {
+
+        // Traverse the list to check for matches
+        boolean found = false;
+        Node<T> currentNode = head;
+
+        // Output information about the donations
+        while (currentNode != null) {
+            Donation donation = (Donation) currentNode.data;
+            if (donation != null && donation.getDonationItem() != null && donation.getDonationItem().equals(targetItem)) {
+                System.out.println("Matched donation: " + donation);
+                found = true;
+            }
+            currentNode = currentNode.next;
+        }
+
+        // Output if no matches were found
+        if (!found) {
+            System.out.println("No donations found for item type: " + targetItem);
+        }
     }
+
 
     @Override
     public void generateReport() {

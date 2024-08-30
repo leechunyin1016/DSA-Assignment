@@ -6,6 +6,7 @@ package control;
 
 import adt.*;
 import boundary.DonationUI;
+import dao.donationAddProduct;
 import entity.*;
 import java.util.Random;
 
@@ -19,25 +20,13 @@ public class DonationControl {
 
     private SortedDoublyLinkedListInterface<Donation> donationList = new SortedDoublyLinkedList<>();
     private DonationUI donationUI = new DonationUI();
+    private donationAddProduct dcp = new donationAddProduct();
+    
+    public DonationControl(){
+        donationList = dcp.donationdata();
+    }
 
     public void donationMainMenu() {
-        Donation[] donations = new Donation[]{
-            new Donation("D1001", "Books", 5, "Alice", "2024/08/01"),
-            new Donation("D1002", "Toys", 10, "Bob", "2024/08/02"),
-            new Donation("D1003", "Clothes", 20, "Charlie", "2024/08/03"),
-            new Donation("D1004", "Food", 30, "David", "2024/08/04"),
-            new Donation("D1005", "Furniture", 1, "Eve", "2024/08/05"),
-            new Donation("D1006", "Electronics", 8, "Frank", "2024/08/06"),
-            new Donation("D1007", "Stationery", 15, "Grace", "2024/08/07"),
-            new Donation("D1008", "Medical Supplies", 7, "Heidi", "2024/08/08"),
-            new Donation("D1009", "Sports Equipment", 3, "Ivan", "2024/08/09"),
-            new Donation("D1010", "Cleaning Supplies", 12, "Judy", "2024/08/10")
-        };
-
-        for (Donation donation : donations) {
-            donationList.add(donation);
-        }
-
         int choice = 0;
         do {
             choice = donationUI.donationMenu();
@@ -54,8 +43,16 @@ public class DonationControl {
                 case 3:
                     amendDonation();
                     break;
+                case 4:
+                    searchDonation();
+                    break;
+                case 5:
+                    trackDonation();
+                    break;
                 case 6:
                     donationList.display();
+                    break;
+                case 7:
                     break;
                 default:
                     System.out.println("Error");
@@ -66,6 +63,7 @@ public class DonationControl {
     public void addDonation() {
         Donation newDonation = donationUI.addDonation();
         donationList.add(newDonation);
+
     }
 
     public void deleteDonation() {
@@ -86,7 +84,7 @@ public class DonationControl {
             System.out.println("No donation found with ID " + pointedDonationId);
         }
     }
-    
+
     public void amendDonation() {
         // Get the ID of the donation to delete
         String pointedDonationId = donationUI.inputDonationAmend();
@@ -97,15 +95,159 @@ public class DonationControl {
         // Find and remove the donation
         Donation foundDonation = donationList.find(donationToAmend);
         System.out.println("Found donation: " + foundDonation);
-        
+
         Donation donationOld = new Donation();
-        
+
         donationOld.setDonationId(foundDonation.getDonationId());
         donationOld.setDonationItem(foundDonation.getDonationItem());
         donationOld.setDonationdDonorName(foundDonation.getDonationdDonorName());
         donationOld.setDonationDate(foundDonation.getDonationDate());
         donationOld.setDonationItemQty(foundDonation.getDonationItemQty());
-        
+
+        int selectedItem = donationUI.selectDonationAmend();
+
+        switch (selectedItem) {
+            case 1:
+                System.out.println("Please Select The Correct Donation Item : ");
+                int donationItemName = donationUI.inputDonationItemName();
+                String donationItemNames = "";
+                switch (donationItemName) {
+                    case 0:
+                        System.out.println("Error");
+                        break;
+                    case 1:
+                        donationItemNames = "Food";
+                        break;
+                    case 2:
+                        donationItemNames = "Daily necessaries";
+                        break;
+                    case 3:
+                        donationItemNames = "Medical";
+                        break;
+                    case 4:
+                        donationItemNames = "Clothes";
+                        break;
+                    case 5:
+                        donationItemNames = "Stationary";
+                        break;
+                    case 6:
+                        donationItemNames = "Cash";
+                        break;
+                    default:
+                        System.out.println("Error");
+                        break;
+                }
+                donationOld.setDonationId(foundDonation.getDonationId());
+                donationOld.setDonationItem(donationItemNames);
+                donationOld.setDonationdDonorName(foundDonation.getDonationdDonorName());
+                donationOld.setDonationDate(foundDonation.getDonationDate());
+                donationOld.setDonationItemQty(foundDonation.getDonationItemQty());
+
+                donationList.edit(donationToAmend, donationOld);
+
+                System.out.println("Amend Donation Item Successfull");
+
+                break;
+
+            case 2:
+                int newDonationQuantity = donationUI.amendCorrectQuantity();
+
+                donationOld.setDonationId(foundDonation.getDonationId());
+                donationOld.setDonationItem(foundDonation.getDonationItem());
+                donationOld.setDonationdDonorName(foundDonation.getDonationdDonorName());
+                donationOld.setDonationDate(foundDonation.getDonationDate());
+                donationOld.setDonationItemQty(newDonationQuantity);
+
+                donationList.edit(donationToAmend, donationOld);
+
+                System.out.println("Amend Donation Quantity Successfull");
+                break;
+
+            case 3:
+                String newDonorName = donationUI.amendCorrectDonorName();
+
+                donationOld.setDonationId(foundDonation.getDonationId());
+                donationOld.setDonationItem(foundDonation.getDonationItem());
+                donationOld.setDonationdDonorName(newDonorName);
+                donationOld.setDonationDate(foundDonation.getDonationDate());
+                donationOld.setDonationItemQty(foundDonation.getDonationItemQty());
+
+                donationList.edit(donationToAmend, donationOld);
+
+                System.out.println("Amend Donation Quantity Successfull");
+                break;
+
+            case 4:
+                String newDate = donationUI.amendCorrectDate();
+
+                donationOld.setDonationId(foundDonation.getDonationId());
+                donationOld.setDonationItem(foundDonation.getDonationItem());
+                donationOld.setDonationdDonorName(foundDonation.getDonationdDonorName());
+                donationOld.setDonationDate(newDate);
+                donationOld.setDonationItemQty(foundDonation.getDonationItemQty());
+
+                donationList.edit(donationToAmend, donationOld);
+
+                System.out.println("Amend Donation Quantity Successfull");
+                break;
+
+            default:
+                System.out.println("Error");
+                break;
+
+        };
+
+    }
+
+    public void searchDonation() {
+        String searchTarget = donationUI.inputDonationSearch();
+
+        // Create a dummy Donation object with only the ID
+        Donation donationToAmend = new Donation(searchTarget);
+
+        // Find and remove the donation
+        Donation foundDonation = donationList.find(donationToAmend);
+        System.out.println("Target Donation : " + foundDonation);
+
+        donationUI.pressEnterContinue();
+    }
+    
+    public void trackDonation(){
+        System.out.println("Please Select The Donation Item Want To Track : ");
+                int donationItemName = donationUI.inputDonationItemName();
+                String donationItemNames = "";
+                switch (donationItemName) {
+                    case 0:
+                        System.out.println("Error");
+                        break;
+                    case 1:
+                        donationItemNames = "Food";
+                        donationList.filter(donationItemNames);
+                        break;
+                    case 2:
+                        donationItemNames = "Daily necessaries";
+                        donationList.filter(donationItemNames);
+                        break;
+                    case 3:
+                        donationItemNames = "Medical";
+                        donationList.filter(donationItemNames);
+                        break;
+                    case 4:
+                        donationItemNames = "Clothes";
+                        donationList.filter(donationItemNames);
+                        break;
+                    case 5:
+                        donationItemNames = "Stationary";
+                        donationList.filter(donationItemNames);
+                        break;
+                    case 6:
+                        donationItemNames = "Cash";
+                        donationList.filter(donationItemNames);
+                        break;
+                    default:
+                        System.out.println("Error");
+                        break;                        
+                }
 
     }
 

@@ -4,6 +4,8 @@
  */
 package entity;
 
+import java.util.Objects;
+
 /**
  *
  * @author junyi
@@ -16,7 +18,7 @@ public class Donation implements Comparable<Donation> {
     private String donationDate;
     
     public Donation(){
-           this.donationId = "";
+        this.donationId = "";
         this.donationItem = "";
         this.donationItemQty = 0;
         this.donationDate = "";
@@ -81,8 +83,8 @@ public class Donation implements Comparable<Donation> {
     public int compareTo(Donation other) {
         return this.donationId.compareTo(other.donationId);
     }
+    
 
-    // Override equals and hashCode
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -90,12 +92,13 @@ public class Donation implements Comparable<Donation> {
         Donation donation = (Donation) obj;
         return donationId.equals(donation.donationId);
     }
+    
 
 
     
     @Override
     public String toString() {
-        return "donationId=" + donationId + ", donationName=" + donationItem + ", donationQty=" + donationItemQty + ", Donorname=" + donationdDonorName + ", Date=" + donationDate + " . ";
+        return "donationId=" + donationId + ", donationItem=" + donationItem + ", donationQty=" + donationItemQty + ", Donorname=" + donationdDonorName + ", Date=" + donationDate + " . ";
     }
 
 
