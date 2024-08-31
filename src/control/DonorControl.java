@@ -571,8 +571,6 @@ public class DonorControl {
         int government = 0;
         int foundation = 0;
         int organization = 0;
-        donorUI.printDonorList(donorList);
-        System.out.println(donorList.size());
         for (int i = 0; i < donorList.size(); i++) {
             if (donorList.getEntry(i).getDonorType().equalsIgnoreCase("Individual")) {
                 individual++;
