@@ -4,6 +4,9 @@
  */
 package adt;
 
+import entity.Donation;
+
+
 /**
  *
  * @author LEE CHUN YIN
@@ -30,8 +33,11 @@ public interface SortedDoublyLinkedListInterface<T> {
 
     public boolean isEmpty();
 
-    public void filter(String sortTarget, boolean asc);
+    public void filter(String targetItem);
 
     public void generateReport();
+        
 
 }
+
+
