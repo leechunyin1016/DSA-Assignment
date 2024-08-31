@@ -98,7 +98,18 @@ public class Donation implements Comparable<Donation> {
     
     @Override
     public String toString() {
-        return "donationId=" + donationId + ", donationItem=" + donationItem + ", donationQty=" + donationItemQty + ", Donorname=" + donationdDonorName + ", Date=" + donationDate + " . ";
+          return String.format(
+        "%-5s %-20s %-3d %-15s %s",
+        donationId,
+        donationItem,
+        donationItemQty,
+        donationdDonorName,
+        donationDate
+    );
+    }
+
+    public Donation[] toArray(Donation[] donation) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 

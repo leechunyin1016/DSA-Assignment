@@ -249,11 +249,6 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
     }
 
     @Override
-    public Node<T> getHead() {
-        return head; // Getter for head
-    }
-
-    @Override
     public T getEntry(int position) {
         // Check if position is valid
         if (position < 0 || position >= size) {
@@ -271,6 +266,10 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
 
         // Return the data of the node at the specified position
         return current.data;
+    }
+
+    public Donation[] toArray(Donation[] donation) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

@@ -28,6 +28,8 @@ public class DonationControl {
     }
 
     public void donationMainMenu() {
+
+        Donation donation = new Donation();
         int choice = 0;
         do {
             choice = donationUI.donationMenu();
@@ -54,6 +56,7 @@ public class DonationControl {
                     listDonation();
                     break;
                 case 7:
+                    generateReport();
                     break;
                 default:
                     System.out.println("Error");
@@ -76,8 +79,9 @@ public class DonationControl {
 
         // Find and remove the donation
         Donation foundDonation = donationList.find(donationToRemove);
-        System.out.println("Found donation: " + foundDonation);
-
+        donationUI.getTitle();
+        System.out.println(foundDonation);
+        donationUI.pressEnterContinue();
         if (foundDonation != null) {
             donationList.remove(foundDonation);
             System.out.println("Donation with ID " + pointedDonationId + " has been removed.");
@@ -95,7 +99,14 @@ public class DonationControl {
 
         // Find and remove the donation
         Donation foundDonation = donationList.find(donationToAmend);
-        System.out.println("Found donation: " + foundDonation);
+        
+        if(foundDonation == null){
+            System.out.println("No donation found with ID " + pointedDonationId);
+            donationMainMenu();
+        }
+        
+        donationUI.getTitle();
+        System.out.println(foundDonation);
 
         Donation donationOld = new Donation();
 
@@ -114,7 +125,8 @@ public class DonationControl {
                 String donationItemNames = "";
                 switch (donationItemName) {
                     case 0:
-                        System.out.println("Error");
+                        donationUI.pressEnterContinue();
+                        donationUI.donationMenu();
                         break;
                     case 1:
                         donationItemNames = "Food";
@@ -208,6 +220,7 @@ public class DonationControl {
 
         // Find and remove the donation
         Donation foundDonation = donationList.find(donationToAmend);
+        donationUI.getTitle();
         System.out.println("Target Donation : " + foundDonation);
 
         donationUI.pressEnterContinue();
@@ -239,28 +252,40 @@ public class DonationControl {
                 break;
             case 1:
                 donationItemNames = "Food";
+                donationUI.getTitle();
                 donationUI.printFilteredList(filter(donationItemNames));
+                donationUI.pressEnterContinue();
 
                 break;
             case 2:
                 donationItemNames = "Daily necessaries";
+                donationUI.getTitle();
                 donationUI.printFilteredList(filter(donationItemNames));
+                donationUI.pressEnterContinue();
                 break;
             case 3:
                 donationItemNames = "Medical";
+                donationUI.getTitle();
                 donationUI.printFilteredList(filter(donationItemNames));
+                donationUI.pressEnterContinue();
                 break;
             case 4:
                 donationItemNames = "Clothes";
+                donationUI.getTitle();
                 donationUI.printFilteredList(filter(donationItemNames));
+                donationUI.pressEnterContinue();
                 break;
             case 5:
                 donationItemNames = "Stationary";
+                donationUI.getTitle();
                 donationUI.printFilteredList(filter(donationItemNames));
+                donationUI.pressEnterContinue();
                 break;
             case 6:
                 donationItemNames = "Cash";
+                donationUI.getTitle();
                 donationUI.printFilteredList(filter(donationItemNames));
+                donationUI.pressEnterContinue();
                 break;
             default:
                 System.out.println("Error");
@@ -274,16 +299,25 @@ public class DonationControl {
 
         switch (donationListShow) {
             case 1:
+                donationUI.getTitle();
                 donationList.display();
+                donationUI.pressEnterContinue();
                 break;
             case 2:
                 donationShowByDonor();
+                donationUI.pressEnterContinue();
                 break;
             case 3:
                 donationShowByItem();
+                donationUI.pressEnterContinue();
                 break;
             case 4:
                 donationShowByQty();
+                donationUI.pressEnterContinue();
+                break;
+            case 5:
+                donationShowByDate();
+                donationUI.pressEnterContinue();
                 break;
             default:
                 break;
@@ -292,20 +326,80 @@ public class DonationControl {
 
     public void donationShowByDonor() {
         donationList.sort(Comparator.comparing(Donation::getDonationdDonorName));
+        donationUI.getTitle();
         donationList.display();
         donationList.sort(Comparator.comparing(Donation::getDonationId));
     }
 
     public void donationShowByItem() {
         donationList.sort(Comparator.comparing(Donation::getDonationItem));
+        donationUI.getTitle();
         donationList.display();
         donationList.sort(Comparator.comparing(Donation::getDonationId));
     }
 
     public void donationShowByQty() {
         donationList.sort(Comparator.comparingInt(Donation::getDonationItemQty));
+        donationUI.getTitle();
         donationList.display();
         donationList.sort(Comparator.comparing(Donation::getDonationId));
+    }
+
+    public void donationShowByDate() {
+        donationList.sort(Comparator.comparing(Donation::getDonationDate));
+        donationUI.getTitle();
+        donationList.display();
+        donationList.sort(Comparator.comparing(Donation::getDonationId));
+    }
+
+    public void generateReport() {
+        // Arrays to store donation types and their total quantities
+        final int maxTypes = 100; // Adjust size as needed
+        String[] types = new String[maxTypes];
+        int[] quantities = new int[maxTypes];
+        int count = 0;
+
+        // Traverse the list to aggregate donation data
+        int size = donationList.size();
+        for (int i = 0; i < size; i++) {
+            Donation donation = donationList.getEntry(i);
+            String type = donation.getDonationItem();
+            int quantity = donation.getDonationItemQty();
+
+            int index = findTypeIndex(types, type, count);
+
+            if (index != -1) {
+                // Type already exists in the array
+                quantities[index] += quantity;
+            } else if (count < maxTypes) {
+                // New type
+                types[count] = type;
+                quantities[count] = quantity;
+                count++;
+            }
+        }
+
+        // Print the report
+        printReport(types, quantities, count);
+        donationUI.pressEnterContinue();
+    }
+
+    private static int findTypeIndex(String[] types, String type, int count) {
+        for (int i = 0; i < count; i++) {
+            if (types[i].equals(type)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static void printReport(String[] types, int[] quantities, int count) {
+        System.out.println("============================================");
+        System.out.println("Donation Report:");
+        System.out.println("============================================");
+        for (int i = 0; i < count; i++) {
+            System.out.println("Type: " + types[i] + " | Total Quantity: " + quantities[i]);
+        }
     }
 
     public String getRandomNumber() {
