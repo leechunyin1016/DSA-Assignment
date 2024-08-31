@@ -39,7 +39,7 @@ public class DoneeManagementUI {
     public void listAllDonee(String outputStr) {
         System.out.println("\nList of Donee:\n" + outputStr);
     }
-    
+
     public boolean askConfirmation(String message) {
         System.out.print(message + " (Y/N): ");
         char confirmation = scanner.nextLine().toUpperCase().charAt(0);
@@ -67,19 +67,19 @@ public class DoneeManagementUI {
             System.out.println("Donee not Found ...");
         }
     }
-    
-    public int filterDoneeType(){
+
+    public int filterDoneeType() {
         System.out.println("Filter By:");
         System.out.println("1. Individual");
         System.out.println("2. Family");
         System.out.println("3. Organization");
         System.out.println("Select your choice:");
-        
+
         int option = scanner.nextInt();
         scanner.nextLine();
         System.out.println();
         return option;
-}
+    }
 
     public String inputDoneeID() {
         System.out.print("Enter Donee ID: ");
@@ -96,13 +96,13 @@ public class DoneeManagementUI {
 
         // Input details
         System.out.print("Name: ");
-        String name = scanner.nextLine().toUpperCase(); 
+        String name = scanner.nextLine().toUpperCase();
 
         System.out.print("Contact: ");
-        String contact = scanner.nextLine().toUpperCase(); 
+        String contact = scanner.nextLine().toUpperCase();
 
         System.out.print("Address: ");
-        String address = scanner.nextLine().toUpperCase(); 
+        String address = scanner.nextLine().toUpperCase();
 
         LocalDate dateOfBirth = null;
         while (dateOfBirth == null) {
@@ -152,7 +152,7 @@ public class DoneeManagementUI {
         char type = '\0';
         while (type != 'O' && type != 'F' && type != 'I') {
             System.out.print("Type (O - Organization, F - Family, I - Individual): ");
-            type = scanner.nextLine().toUpperCase().charAt(0); 
+            type = scanner.nextLine().toUpperCase().charAt(0);
             if (type != 'O' && type != 'F' && type != 'I') {
                 System.out.println("Invalid input. Please enter 'O', 'F', or 'I'.");
             }
@@ -162,7 +162,7 @@ public class DoneeManagementUI {
 
         Donee donee = new Donee(id, name, contact, address, dateOfBirth, doneeAge, householdSize, null, income, gender, type, false);
         donee.setEligibility(checkEligibility(donee));
-        
+
         System.out.println("\nConfirm the Donee Details:");
         System.out.println("Donee ID: " + id);
         System.out.println("Name: " + name);
@@ -218,26 +218,27 @@ public class DoneeManagementUI {
 
         System.out.println("Donee details updated successfully!");
     }
-    
- public void printFilteredList(SortedDoublyLinkedListInterface<Donee> doneeList) {
-    // Print table header
-    System.out.printf("%-6s %-20s %-12s %-15s %-10s \n", "ID", "Name", "Type", "Priority", "Income");
-    System.out.println("--------------------------------------------------------------");
 
-    for (int i = 0; i < doneeList.size(); i++) {
-        Donee donee = doneeList.getEntry(i);
-        System.out.printf("%-5s %-20s %-12s %-15s %-10.2f \n", 
-                          donee.getDoneeID(), 
-                          donee.getDoneeName(),
-                          donee.getDoneeType(), 
-                          donee.getPriorityLvl(), 
-                          donee.getDoneeIncome());
+    public void printFilteredList(SortedDoublyLinkedListInterface<Donee> doneeList) {
+        // Print table header
+        System.out.printf("%-6s %-20s %-12s %-15s %-10s \n", "ID", "Name", "Type", "Priority", "Income");
+        System.out.println("--------------------------------------------------------------");
+
+        for (int i = 0; i < doneeList.size(); i++) {
+            Donee donee = doneeList.getEntry(i);
+            System.out.printf("%-5s %-20s %-12s %-15s %-10.2f \n",
+                    donee.getDoneeID(),
+                    donee.getDoneeName(),
+                    donee.getDoneeType(),
+                    donee.getPriorityLvl(),
+                    donee.getDoneeIncome());
+        }
+        System.out.println();
     }
-    System.out.println();
-}
-
 
     private boolean checkEligibility(Donee donee) {
-        return donee.getDoneeIncome() < 3000 && donee.getDoneeAge() > 18 && donee.getHouseholdSize() > 2; // Adjust this logic as needed
+        boolean isPriorityEligible = donee.getPriorityLvl().equals("Medium") || donee.getPriorityLvl().equals("High");
+        boolean isAgeEligible = donee.getDoneeAge() >= 18;
+        return isPriorityEligible && isAgeEligible;
     }
 }
