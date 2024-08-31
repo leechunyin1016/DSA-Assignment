@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
 import java.util.Random;
-import entity.Distribution;
 
 /**
  *
@@ -35,7 +34,6 @@ public class Donee implements Comparable<Donee> {
     private char doneeGender;
     private char doneeType;
     private boolean eligibility;
-    private Distribution distribution;
 
     public Donee(String doneeID, String doneeName, String doneeContact, String doneeAddress, LocalDate dateOfBirth, int doneeAge, int householdSize, String priorityLvl, double doneeIncome, char doneeGender, char doneeType, boolean eligibility) {
         this.doneeID = doneeID;
@@ -51,7 +49,6 @@ public class Donee implements Comparable<Donee> {
         this.doneeType = doneeType;
         this.eligibility = eligibility;
         setDeterminePriorityLevel();
-        this.distribution = new Distribution();
     }
 
     // Constructor for searching by ID
@@ -146,8 +143,8 @@ public class Donee implements Comparable<Donee> {
     }
 
     public static synchronized String generateDoneeID() {
-        int randomNum = random.nextInt(10000); // Generate a random number between 0 and 9999
-        return String.format("DN%04d", randomNum); // Format it to be 4 digits with leading zeros if necessary
+        int randomNum = random.nextInt(10000); 
+        return String.format("DN%04d", randomNum); 
     }
 
     public String getPriorityLvl() {
