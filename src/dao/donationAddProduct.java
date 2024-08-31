@@ -18,7 +18,7 @@ public class donationAddProduct {
         donationList.add(new Donation("D1001", "Books", 5, "2024/08/01", "Alice"));
         donationList.add(new Donation("D1002", "Food", 10, "2024/08/02", "Bob"));
         donationList.add(new Donation("D1003", "Clothes", 20, "2024/08/03", "Charlie"));
-        donationList.add(new Donation("D1004", "Food", 30, "2024/08/04", "David"));
+        donationList.add(new Donation("D1004", "Food", 30, "2024/08/04", "Alice"));
         
         
         return donationList;

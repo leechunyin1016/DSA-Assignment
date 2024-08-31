@@ -5,6 +5,7 @@
 package adt;
 
 import entity.Donation;
+import java.util.Comparator;
 
 /**
  *
@@ -15,7 +16,6 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
 
     //initial the default value once create
     public SortedDoublyLinkedList() {
@@ -225,10 +225,32 @@ public class SortedDoublyLinkedList<T extends Comparable<T>> implements SortedDo
         }
     }
 
+    @Override
+    public void sort(Comparator<T> comparator) {
+        if (head == null || head.next == null) {
+            return; // List is empty or has only one element
+        }
+
+        boolean swapped;
+        do {
+            swapped = false;
+            Node<T> current = head;
+            while (current != null && current.next != null) {
+                if (comparator.compare(current.data, current.next.data) > 0) {
+                    // Swap the data
+                    T temp = current.data;
+                    current.data = current.next.data;
+                    current.next.data = temp;
+                    swapped = true; // Set swapped to true to continue sorting
+                }
+                current = current.next;
+            }
+        } while (swapped); // Repeat until no swaps occur
+    }
 
     @Override
-    public void generateReport() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Node<T> getHead() {
+        return head; // Getter for head
     }
 
     @Override

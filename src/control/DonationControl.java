@@ -8,6 +8,7 @@ import adt.*;
 import boundary.DonationUI;
 import dao.donationAddProduct;
 import entity.*;
+import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -21,8 +22,8 @@ public class DonationControl {
     private SortedDoublyLinkedListInterface<Donation> donationList = new SortedDoublyLinkedList<>();
     private DonationUI donationUI = new DonationUI();
     private donationAddProduct dcp = new donationAddProduct();
-    
-    public DonationControl(){
+
+    public DonationControl() {
         donationList = dcp.donationdata();
     }
 
@@ -50,7 +51,7 @@ public class DonationControl {
                     trackDonation();
                     break;
                 case 6:
-                    donationList.display();
+                    listDonation();
                     break;
                 case 7:
                     break;
@@ -211,44 +212,100 @@ public class DonationControl {
 
         donationUI.pressEnterContinue();
     }
-    
-    public void trackDonation(){
-        System.out.println("Please Select The Donation Item Want To Track : ");
-                int donationItemName = donationUI.inputDonationItemName();
-                String donationItemNames = "";
-                switch (donationItemName) {
-                    case 0:
-                        System.out.println("Error");
-                        break;
-                    case 1:
-                        donationItemNames = "Food";
-                        donationList.filter(donationItemNames);
-                        break;
-                    case 2:
-                        donationItemNames = "Daily necessaries";
-                        donationList.filter(donationItemNames);
-                        break;
-                    case 3:
-                        donationItemNames = "Medical";
-                        donationList.filter(donationItemNames);
-                        break;
-                    case 4:
-                        donationItemNames = "Clothes";
-                        donationList.filter(donationItemNames);
-                        break;
-                    case 5:
-                        donationItemNames = "Stationary";
-                        donationList.filter(donationItemNames);
-                        break;
-                    case 6:
-                        donationItemNames = "Cash";
-                        donationList.filter(donationItemNames);
-                        break;
-                    default:
-                        System.out.println("Error");
-                        break;                        
-                }
 
+    public SortedDoublyLinkedListInterface<Donation> filter(String targetItem) {
+
+        SortedDoublyLinkedListInterface<Donation> filteredDonationList = new SortedDoublyLinkedList<>();
+
+        if (donationList.isEmpty()) {
+            return null;
+        }
+        // Output information about the donations
+        for (int i = 0; i < donationList.size(); i++) {
+            if (donationList.getEntry(i).getDonationItem().equalsIgnoreCase(targetItem)) {
+                filteredDonationList.add(donationList.getEntry(i));
+            }
+        }
+        return filteredDonationList;
+    }
+
+    public void trackDonation() {
+        System.out.println("Please Select The Donation Item Want To Track : ");
+        int donationItemName = donationUI.inputDonationItemName();
+        String donationItemNames = "";
+        switch (donationItemName) {
+            case 0:
+                System.out.println("Error");
+                break;
+            case 1:
+                donationItemNames = "Food";
+                donationUI.printFilteredList(filter(donationItemNames));
+
+                break;
+            case 2:
+                donationItemNames = "Daily necessaries";
+                donationUI.printFilteredList(filter(donationItemNames));
+                break;
+            case 3:
+                donationItemNames = "Medical";
+                donationUI.printFilteredList(filter(donationItemNames));
+                break;
+            case 4:
+                donationItemNames = "Clothes";
+                donationUI.printFilteredList(filter(donationItemNames));
+                break;
+            case 5:
+                donationItemNames = "Stationary";
+                donationUI.printFilteredList(filter(donationItemNames));
+                break;
+            case 6:
+                donationItemNames = "Cash";
+                donationUI.printFilteredList(filter(donationItemNames));
+                break;
+            default:
+                System.out.println("Error");
+                break;
+        }
+
+    }
+
+    public void listDonation() {
+        int donationListShow = donationUI.inputDonationList();
+
+        switch (donationListShow) {
+            case 1:
+                donationList.display();
+                break;
+            case 2:
+                donationShowByDonor();
+                break;
+            case 3:
+                donationShowByItem();
+                break;
+            case 4:
+                donationShowByQty();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void donationShowByDonor() {
+        donationList.sort(Comparator.comparing(Donation::getDonationdDonorName));
+        donationList.display();
+        donationList.sort(Comparator.comparing(Donation::getDonationId));
+    }
+
+    public void donationShowByItem() {
+        donationList.sort(Comparator.comparing(Donation::getDonationItem));
+        donationList.display();
+        donationList.sort(Comparator.comparing(Donation::getDonationId));
+    }
+
+    public void donationShowByQty() {
+        donationList.sort(Comparator.comparingInt(Donation::getDonationItemQty));
+        donationList.display();
+        donationList.sort(Comparator.comparing(Donation::getDonationId));
     }
 
     public String getRandomNumber() {

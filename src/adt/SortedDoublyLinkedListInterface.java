@@ -5,6 +5,7 @@
 package adt;
 
 import entity.Donation;
+import java.util.Comparator;
 
 
 /**
@@ -33,7 +34,9 @@ public interface SortedDoublyLinkedListInterface<T> {
 
     public void filter(String targetItem);
 
-    public void generateReport();
+    public void sort(Comparator<T> comparator);
+
+    public Node<T> getHead();
     
     public T getEntry(int position);
     

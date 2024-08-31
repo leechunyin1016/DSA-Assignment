@@ -100,10 +100,19 @@ public class DonationUI {
     }
     
     public String inputDonationSearch(){
-        System.out.print("Plese Enter The Donation ID That Need To Search (Dxxxx) : ");
+        System.out.print("Please Enter The Donation ID That Need To Search (Dxxxx) : ");
         String searchDonationId = scanner.next();
         scanner.nextLine();
         return searchDonationId;
+    }
+    
+    public int inputDonationList(){
+        System.out.println("Which One Type You Want To Display : ");
+        System.out.println("1. Display All");
+        System.out.println("2. Display By Donor");
+        int donationList = scanner.nextInt();
+        scanner.nextLine();
+        return donationList;
     }
 
     public int selectDonationAmend() {
@@ -138,6 +147,21 @@ public class DonationUI {
         String newDate = scanner.next();
         scanner.nextLine();
         return newDate;
+    }
+    
+    public void printFilteredList(SortedDoublyLinkedListInterface<Donation> donationList){
+        
+        System.out.println("List");
+        System.out.println("==============================");
+       
+        System.out.println("------------------------------");
+        for(int i = 0; i < donationList.size(); i++){
+            Donation donation = donationList.getEntry(i);
+            System.out.printf("%s %s %d %s %s \n", donation.getDonationId(),donation.getDonationItem()
+                    ,donation.getDonationItemQty(),donation.getDonationdDonorName(),donation.getDonationDate());
+        }
+        System.out.println();
+        
     }
 
     public Donation addDonation() {
