@@ -17,6 +17,7 @@ public class Donor implements Comparable<Donor> {
     private String donorId;
     private String donorName;
     private String donorType;
+    private String donorCategory;
     private String phoneNo;
     private String email;
     private String dob;
@@ -26,26 +27,30 @@ public class Donor implements Comparable<Donor> {
         this.donorId = generateDonorId();
         this.donorName = "";
         this.donorType = "";
+        this.donorCategory = "";
         this.phoneNo = "";
         this.email = "";
         this.dob = "";
         this.donations = new SortedDoublyLinkedList<>();
     }
 
-    public Donor(String name, String donorType, String phoneNo, String email, String dob, SortedDoublyLinkedListInterface<Donation> donations) {
+    public Donor(String name, String donorType, String donorCategory, String phoneNo, String email, String dob, SortedDoublyLinkedListInterface<Donation> donations) {
         this.donorId = generateDonorId();
         this.donorName = name;
         this.donorType = donorType;
+        this.donorCategory = donorCategory;
         this.phoneNo = phoneNo;
         this.email = email;
         this.dob = dob;
         this.donations = donations;
     }
-    
-        public Donor(String name, String donorType, String phoneNo, String email, String dob) {
+
+    public Donor(String name, String donorType, String donorCategory, String phoneNo, String email, String dob) {
         this.donorId = generateDonorId();
         this.donorName = name;
         this.donorType = donorType;
+        this.donorCategory = donorCategory;
+
         this.phoneNo = phoneNo;
         this.email = email;
         this.dob = dob;
@@ -53,7 +58,7 @@ public class Donor implements Comparable<Donor> {
     }
 
     private static String generateDonorId() {
-        String id = String.format("D%04d", idCounter);
+        String id = String.format("DR%04d", idCounter);
         idCounter++;
         return id;
     }
@@ -68,6 +73,14 @@ public class Donor implements Comparable<Donor> {
 
     public void setDonorName(String donorName) {
         this.donorName = donorName;
+    }
+
+    public void setDonorCategory(String donorCategory) {
+        this.donorCategory = donorCategory;
+    }
+
+    public String getDonorCategory() {
+        return donorCategory;
     }
 
     public void setDonorType(String donorType) {
@@ -129,7 +142,7 @@ public class Donor implements Comparable<Donor> {
 
     @Override
     public String toString() {
-        return "donorId=" + donorId + ", donorName=" + donorName + ", donorType=" + donorType + ", phoneNo=" + phoneNo + ", email=" + email + ", dob=" + dob;
+        return "donorId=" + donorId + ", donorName=" + donorName + ", donorType=" + donorType + ", donorCategory=" + donorCategory + ", phoneNo=" + phoneNo + ", email=" + email + ", dob=" + dob;
     }
 
 }
