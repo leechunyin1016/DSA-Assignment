@@ -19,6 +19,13 @@ public class DoneeControl {
 
     private SortedDoublyLinkedList<Donee> doneeList = new SortedDoublyLinkedList<>();
     private DoneeManagementUI doneeUI = new DoneeManagementUI();
+    private SortedDoublyLinkedListInterface<Distribution> distributionList;
+
+    // Constructor to initialize doneeList and distributionList
+    public DoneeControl(SortedDoublyLinkedListInterface<Donee> doneeList, SortedDoublyLinkedListInterface<Distribution> distributionList) {
+        this.doneeList = (SortedDoublyLinkedList<Donee>) doneeList;
+        this.distributionList = distributionList;
+    }
 
     public void runDoneeManagement() {
 
@@ -34,8 +41,6 @@ public class DoneeControl {
             new Donee("DN0009", "Ivan Garcia", "0619283746", "606 Spruce St", LocalDate.of(1980, 3, 3), 44, 1, "MEDIUM", 9000.0, 'M', 'F', true),
             new Donee("DN0010", "Judy Thompson", "0719283746", "707 Redwood St", LocalDate.of(2005, 7, 21), 19, 2, "LOW", 7000.0, 'F', 'I', true)
         };
-        
-        
 
         for (Donee donee : donees) {
             doneeList.add(donee);
@@ -62,7 +67,7 @@ public class DoneeControl {
                     searchDonee();
                     break;
                 case 5:
-//                    doneeUI.listAllDonee(displayDonee());  
+                    listDoneesWithDonations();
                     break;
                 case 6:
                     filterDoneeDetails();
@@ -112,8 +117,8 @@ public class DoneeControl {
     }
 
     public void updateDonee() {
-        String doneeID = doneeUI.inputDoneeID(); 
-        Donee existingDonee = doneeList.find(new Donee(doneeID)); 
+        String doneeID = doneeUI.inputDoneeID();
+        Donee existingDonee = doneeList.find(new Donee(doneeID));
 
         if (existingDonee != null) {
             System.out.println("Current Donee Details:");
@@ -144,7 +149,60 @@ public class DoneeControl {
             System.out.println("Donee with ID " + doneeID + " not found.");
         }
     }
-    
+
+    public void listDoneesWithDonations() {
+        System.out.println("Listing Donees with All Donations Made:");
+        System.out.println("==========================================================================================================================================================================");
+        System.out.printf("| %-5s | %-20s | %-15s | %-30s | %-10s | %-10s | %-3s | %-8s | %-10s | %-6s | %-6s | %-11s |\n",
+                "ID", "Name", "Contact", "Address", "Priority", "DOB", "Age", "H.Size", "Income", "Gender", "Type", "Eligibility");
+
+        for (int i = 0; i < doneeList.size(); i++) {
+            Donee donee = doneeList.getEntry(i);
+
+            System.out.println("==========================================================================================================================================================================");
+            System.out.printf("| %-5s | %-20s | %-15s | %-30s | %-10s | %-10s | %-3d | %-8d | %-10.2f | %-6s | %-6s | %-11s |\n",
+                    donee.getDoneeID(),
+                    donee.getDoneeName(),
+                    donee.getDoneeContact(),
+                    donee.getDoneeAddress(),
+                    donee.getPriorityLvl(),
+                    donee.getDateOfBirth(),
+                    donee.getDoneeAge(),
+                    donee.getHouseholdSize(),
+                    donee.getDoneeIncome(),
+                    donee.getDoneeGender(),
+                    donee.getDoneeType(),
+                    donee.isEligibility() ? "Yes" : "No");
+            System.out.println("==========================================================================================================================================================================");
+
+            boolean hasDistributions = false;
+            System.out.printf("| %-15s | %-12s | %-20s | %-10s |\n", "Distribution ID", "Date", "Donor", "Status");
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+            for (int j = 0; j < distributionList.size(); j++) {
+                Distribution distribution = distributionList.getEntry(j);
+                if (distribution.getDonee().equals(donee)) {
+                    System.out.printf("| %-15s | %-12s | %-20s | %-10s |\n",
+                            distribution.getDistributionId(),
+                            distribution.getDistributionDate(),
+                            distribution.getDonor().getDonorName(),
+                            distribution.getDistributionStatus());
+                    hasDistributions = true;
+                }
+            }
+
+            if (!hasDistributions) {
+                System.out.println("| No distributions found.                                                                                                                                              |");
+            }
+
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println();
+        }
+
+        System.out.println("================================================================================================================================================================================");
+
+    }
+
     public void filterDoneeDetails() {
         int choice = 0;
         choice = doneeUI.filterDoneeType();
@@ -176,7 +234,7 @@ public class DoneeControl {
         for (int i = 0; i < doneeList.size(); i++) {
             Donee donee = doneeList.get(i);
 
-            if ("High".equals(donee.getPriorityLvl())) {
+            if ("HIGH".equals(donee.getPriorityLvl())) {
                 switch (donee.getDoneeType()) {
                     case 'O': // Organization
                         highOrgCount++;
@@ -217,9 +275,9 @@ public class DoneeControl {
         for (int i = maxCount; i > 0; i--) {
             System.out.printf("%2d | ", i);
             System.out.print((highOrgCount >= i) ? " * " : "   ");
-            System.out.print("   "); 
+            System.out.print("   ");
             System.out.print((highFamilyCount >= i) ? " * " : "   ");
-            System.out.print("   "); 
+            System.out.print("   ");
             System.out.print((highIndividualCount >= i) ? " * " : "   ");
             System.out.println();
         }
@@ -239,11 +297,6 @@ public class DoneeControl {
 
         System.out.printf("The DoneeType with the highest number of Donees is: %s%n", highestType);
         System.out.printf("Number of Donees with type %s: %d%n", highestType, maxCount);
-    }
-
-    public static void main(String[] args) {
-        DoneeControl doneeControl = new DoneeControl();
-        doneeControl.runDoneeManagement();
     }
 
     public String displayDonee() {
@@ -281,7 +334,7 @@ public class DoneeControl {
     public SortedDoublyLinkedListInterface<Donee> filter(char targetType) {
         SortedDoublyLinkedListInterface<Donee> filteredDoneeList = new SortedDoublyLinkedList<>();
         if (doneeList.isEmpty()) {
-            return null; 
+            return null;
         }
 
         for (int i = 0; i < doneeList.size(); i++) {
@@ -292,6 +345,13 @@ public class DoneeControl {
         }
 
         return filteredDoneeList;
+    }
+
+    public static void main(String[] args) {
+        SortedDoublyLinkedListInterface<Donee> doneeList = new SortedDoublyLinkedList<>();
+        SortedDoublyLinkedListInterface<Distribution> distributionList = new SortedDoublyLinkedList<>();
+        DoneeControl doneeControl = new DoneeControl(doneeList, distributionList);
+        doneeControl.runDoneeManagement();
     }
 
 }
