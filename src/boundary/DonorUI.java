@@ -90,6 +90,7 @@ public class DonorUI {
                         donation.getDonationdDonorName());
             }
         }
+        System.out.println();
     }
 
     public void printDonorList(SortedDoublyLinkedListInterface<Donor> donorList) {
@@ -764,10 +765,10 @@ public class DonorUI {
                 System.out.println("Enter The Substring To Contain: ");
                 break;
         }
-        return scanner.nextLine().trim(); 
+        return scanner.nextLine().trim();
     }
 
-public String inputFilterDonorCategory() {
+    public String inputFilterDonorCategory() {
         String donorCategory = "";
         int choice = -1;
 
@@ -801,23 +802,161 @@ public String inputFilterDonorCategory() {
 
         return donorCategory;
     }
+
     public String inputFilterDonorType() {
-        System.out.print("Enter Donor Type to filter by (e.g., Government, Private, Organization): ");
-        return scanner.nextLine().trim(); // Read and return the input type
+        String donorType = "";
+        int choice = -1;
+
+        while (true) {
+            System.out.println("Select Donor Type to filter by:");
+            System.out.println("1. Government");
+            System.out.println("2. Foundation");
+            System.out.println("3. Organization");
+            System.out.println("4. Individual");
+
+            System.out.print("Enter the number corresponding to the Donor Type: ");
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+
+                switch (choice) {
+                    case 1:
+                        donorType = "Government";
+                        break;
+                    case 2:
+                        donorType = "Foundation";
+                        break;
+                    case 3:
+                        donorType = "Organization";
+                        break;
+                    case 4:
+                        donorType = "Individual";
+                        break;
+                    default:
+                        System.out.println("Invalid selection. Please choose a number between 1 and 4.");
+                        continue; // Continue the loop if the input is invalid
+                }
+                break; // Exit the loop if a valid choice is made
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Clear invalid input
+            }
+        }
+
+        return donorType;
     }
 
     public String inputFilterDonorPhoneNo() {
-        System.out.print("Enter Donor Type to filter by (e.g., Government, Private, Organization): ");
-        return scanner.nextLine().trim(); // Read and return the input type
+        System.out.println("Choose filter type for Phone Number:");
+        System.out.println("1. Start with");
+        System.out.println("2. End with");
+
+        int choice = -1;
+        while (true) {
+            System.out.print("Enter the number corresponding to your choice: ");
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter the prefix to filter by (starts with): ");
+                        return "start:" + scanner.nextLine().trim(); // Prefix the input with "start:"
+                    case 2:
+                        System.out.print("Enter the suffix to filter by (ends with): ");
+                        return "end:" + scanner.nextLine().trim(); // Prefix the input with "end:"
+                    default:
+                        System.out.println("Invalid selection. Please choose 1 or 2.");
+                        continue; // Continue the loop if the input is invalid
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Clear invalid input
+            }
+        }
     }
 
     public String inputFilterDonorEmail() {
-        System.out.print("Enter Donor Type to filter by (e.g., Government, Private, Organization): ");
-        return scanner.nextLine().trim(); // Read and return the input type
+        System.out.println("Choose filter type for Email:");
+        System.out.println("1. Start with");
+        System.out.println("2. End with");
+
+        int choice = -1;
+        while (true) {
+            System.out.print("Enter the number corresponding to your choice: ");
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter the prefix to filter by (starts with): ");
+                        return "start:" + scanner.nextLine().trim(); // Prefix the input with "start:"
+                    case 2:
+                        System.out.print("Enter the suffix to filter by (ends with): ");
+                        return "end:" + scanner.nextLine().trim(); // Prefix the input with "end:"
+                    default:
+                        System.out.println("Invalid selection. Please choose 1 or 2.");
+                        continue; // Continue the loop if the input is invalid
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Clear invalid input
+            }
+        }
     }
 
     public String inputFilterDonorDOB() {
-        System.out.print("Enter Donor Type to filter by (e.g., Government, Private, Organization): ");
-        return scanner.nextLine().trim(); // Read and return the input type
+        System.out.println("Choose filter type for Date of Birth (DOB):");
+        System.out.println("1. By Day");
+        System.out.println("2. By Month");
+        System.out.println("3. By Year");
+        System.out.println("4. By Date Range");
+
+        int choice = -1;
+        while (true) {
+            System.out.print("Enter the number corresponding to your choice: ");
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter the day to filter by (DD): ");
+                        return "day:" + scanner.nextLine().trim(); // Prefix the input with "day:"
+                    case 2:
+                        System.out.print("Enter the month to filter by (MM): ");
+                        return "month:" + scanner.nextLine().trim(); // Prefix the input with "month:"
+                    case 3:
+                        System.out.print("Enter the year to filter by (YYYY): ");
+                        return "year:" + scanner.nextLine().trim(); // Prefix the input with "year:"
+                    case 4:
+                        System.out.print("Enter the start date of the range (DD/MM/YYYY): ");
+                        String startDate = scanner.nextLine().trim();
+                        System.out.print("Enter the end date of the range (DD/MM/YYYY): ");
+                        String endDate = scanner.nextLine().trim();
+                        return "range:" + startDate + ":" + endDate; // Prefix the input with "range:"
+                    default:
+                        System.out.println("Invalid selection. Please choose 1, 2, 3, or 4.");
+                        continue; // Continue the loop if the input is invalid
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Clear invalid input
+            }
+        }
     }
+    
+        public int displayReportMenu() {
+        System.out.println("Summary Report Menu:");
+        System.out.println("1. Donor Overview Report");
+        System.out.println("2. Donor Demographics Report");
+        System.out.println("3. Donor Type Breakdown");
+        System.out.println("4. Yearly Donor Statistics");
+        System.out.println("5. Exit");
+        System.out.print("Enter your choice: ");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+    
 }

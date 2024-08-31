@@ -10,6 +10,9 @@ import boundary.DonorUI;
 import dao.DonorInitializer;
 import entity.Donation;
 import entity.Donor;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import utility.MessageUI;
 
 /**
@@ -21,6 +24,7 @@ public class DonorControl {
     private SortedDoublyLinkedListInterface<Donor> donorList = new SortedDoublyLinkedList<>();
     private DonorInitializer donorDAO = new DonorInitializer();
     private DonorUI donorUI = new DonorUI();
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
     public DonorControl() {
         donorList = donorDAO.initializeDonors();
@@ -50,7 +54,7 @@ public class DonorControl {
                     filterDonors();
                     break;
                 case 7:
-                    generateDonorSummaryReport();
+                    generateReport();
                     break;
                 case 0:
                     MessageUI.displayExitMessage();
@@ -70,9 +74,10 @@ public class DonorControl {
 
     private void removeDonor() {
         String removeDonorInput = donorUI.inputRemoveDonor(); // Get the input from the user
-
+        searchDonor(removeDonorInput);
         if (containsNumbers(removeDonorInput)) {
             // Remove by donor ID
+
             if (donorUI.confirmRemoveAction("ID", removeDonorInput)) {
                 removeById(removeDonorInput);
             }
@@ -148,6 +153,16 @@ public class DonorControl {
 
     }
 
+    private void searchDonor(String searchInput) {
+        if (containsNumbers(searchInput)) {
+            // Search by donor ID
+            searchById(searchInput);
+        } else {
+            // Search by donor name
+            searchByName(searchInput);
+        }
+    }
+
     private void searchDonor() {
         String searchInput = donorUI.inputSearchDonor(); // Reusing the input method
 
@@ -208,7 +223,7 @@ public class DonorControl {
                 break; // This break is missing
             case 2:
                 int option = donorUI.inputFilterNameOption();
-                donorUI.printDonorList(filterDonorByName(option,donorUI.inputFilterDonorName(option)));
+                donorUI.printDonorList(filterDonorByName(option, donorUI.inputFilterDonorName(option)));
                 break;
             case 3:
                 donorUI.printDonorList(filterDonorByCategory(donorUI.inputFilterDonorCategory()));
@@ -250,7 +265,6 @@ public class DonorControl {
         }
         return filteredDonorList;
     }
-
 
     private SortedDoublyLinkedListInterface<Donor> filterDonorByName(int option, String filterCriteria) {
         SortedDoublyLinkedListInterface<Donor> filteredDonorList = new SortedDoublyLinkedList<>();
@@ -315,49 +329,164 @@ public class DonorControl {
         return filteredDonorList;
     }
 
-    public SortedDoublyLinkedListInterface<Donor> filterDonorByPhoneNo(String targetItem) {
+    public void filterDonorsByPhoneNo() {
+        String filterCriteria = donorUI.inputFilterDonorPhoneNo();
+        SortedDoublyLinkedListInterface<Donor> filteredDonorList = filterDonorByPhoneNo(filterCriteria);
+        donorUI.printDonorList(filteredDonorList); // Assuming this method exists to display the list
+    }
 
+    private SortedDoublyLinkedListInterface<Donor> filterDonorByPhoneNo(String filterCriteria) {
         SortedDoublyLinkedListInterface<Donor> filteredDonorList = new SortedDoublyLinkedList<>();
+        String filterType = filterCriteria.split(":")[0];
+        String filterValue = filterCriteria.split(":")[1];
 
         if (donorList.isEmpty()) {
-            return null;
+            return filteredDonorList; // Return empty list if no donors
         }
+
         for (int i = 0; i < donorList.size(); i++) {
-            if (donorList.getEntry(i).getDonorType().equalsIgnoreCase(targetItem)) {
-                filteredDonorList.add(donorList.getEntry(i));
+            Donor donor = donorList.getEntry(i);
+            String phoneNo = donor.getPhoneNo();
+
+            switch (filterType) {
+                case "start":
+                    if (phoneNo.startsWith(filterValue)) {
+                        filteredDonorList.add(donor);
+                    }
+                    break;
+                case "end":
+                    if (phoneNo.endsWith(filterValue)) {
+                        filteredDonorList.add(donor);
+                    }
+                    break;
+                default:
+                    System.out.println("Invalid filter type.");
+                    break;
             }
         }
+
         return filteredDonorList;
     }
 
-    public SortedDoublyLinkedListInterface<Donor> filterDonorByEmail(String targetItem) {
-
+    private SortedDoublyLinkedListInterface<Donor> filterDonorByEmail(String filterCriteria) {
         SortedDoublyLinkedListInterface<Donor> filteredDonorList = new SortedDoublyLinkedList<>();
+        String filterType = filterCriteria.split(":")[0];
+        String filterValue = filterCriteria.split(":")[1];
 
         if (donorList.isEmpty()) {
-            return null;
+            return filteredDonorList; // Return empty list if no donors
         }
+
         for (int i = 0; i < donorList.size(); i++) {
-            if (donorList.getEntry(i).getDonorType().equalsIgnoreCase(targetItem)) {
-                filteredDonorList.add(donorList.getEntry(i));
+            Donor donor = donorList.getEntry(i);
+            String email = donor.getEmail();
+
+            switch (filterType) {
+                case "start":
+                    if (email.startsWith(filterValue)) {
+                        filteredDonorList.add(donor);
+                    }
+                    break;
+                case "end":
+                    if (email.endsWith(filterValue)) {
+                        filteredDonorList.add(donor);
+                    }
+                    break;
+                default:
+                    System.out.println("Invalid filter type.");
+                    break;
             }
         }
+
         return filteredDonorList;
     }
 
-    public SortedDoublyLinkedListInterface<Donor> filterDonorByDOB(String targetItem) {
+    public void filterDonorsByDOB() {
+        String filterCriteria = donorUI.inputFilterDonorDOB();
+        SortedDoublyLinkedListInterface<Donor> filteredDonorList = filterDonorByDOB(filterCriteria);
+        donorUI.printDonorList(filteredDonorList); // Display the filtered donor list
+    }
 
+    private SortedDoublyLinkedListInterface<Donor> filterDonorByDOB(String filterCriteria) {
         SortedDoublyLinkedListInterface<Donor> filteredDonorList = new SortedDoublyLinkedList<>();
+        String[] criteriaParts = filterCriteria.split(":");
 
         if (donorList.isEmpty()) {
-            return null;
+            return filteredDonorList; // Return empty list if no donors
         }
+
+        if (criteriaParts.length < 2) {
+            System.out.println("Invalid filter criteria.");
+            return filteredDonorList; // Return empty list if criteria are invalid
+        }
+
+        String filterType = criteriaParts[0];
+        String filterValue1 = criteriaParts[1];
+        String filterValue2 = criteriaParts.length > 2 ? criteriaParts[2] : null;
+
+        // Validate date format
+        if (filterType.equals("range") && (filterValue1 == null || filterValue2 == null || !isValidDate(filterValue1) || !isValidDate(filterValue2))) {
+            System.out.println("One or both dates are invalid. Ensure dates are in the format DD/MM/YYYY.");
+            return filteredDonorList; // Return empty list if dates are invalid
+        }
+
         for (int i = 0; i < donorList.size(); i++) {
-            if (donorList.getEntry(i).getDonorType().equalsIgnoreCase(targetItem)) {
-                filteredDonorList.add(donorList.getEntry(i));
+            Donor donor = donorList.getEntry(i);
+            String dob = donor.getDob(); // Assume DOB is in DD/MM/YYYY format
+
+            switch (filterType) {
+                case "day":
+                    if (dob.startsWith(filterValue1 + "/")) {
+                        filteredDonorList.add(donor);
+                    }
+                    break;
+                case "month":
+                    if (dob.substring(3, 5).equalsIgnoreCase(filterValue1)) {
+                        filteredDonorList.add(donor);
+                    }
+                    break;
+                case "year":
+                    if (dob.substring(6).equalsIgnoreCase(filterValue1)) {
+                        filteredDonorList.add(donor);
+                    }
+                    break;
+                case "range":
+                    Date startDate = parseDate(filterValue1);
+                    Date endDate = parseDate(filterValue2);
+                    Date donorDate = parseDate(dob);
+
+                    if (donorDate != null && startDate != null && endDate != null) {
+                        if (!donorDate.before(startDate) && !donorDate.after(endDate)) {
+                            filteredDonorList.add(donor);
+                        }
+                    }
+                    break;
+                default:
+                    System.out.println("Invalid filter type.");
+                    break;
             }
         }
+
         return filteredDonorList;
+    }
+
+    private boolean isValidDate(String dateStr) {
+        try {
+            DATE_FORMAT.setLenient(false);
+            DATE_FORMAT.parse(dateStr);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    private Date parseDate(String dateStr) {
+        try {
+            DATE_FORMAT.setLenient(false);
+            return DATE_FORMAT.parse(dateStr);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     private void generateDonorSummaryReport() {
@@ -395,6 +524,102 @@ public class DonorControl {
 
         donorUI.displayDonorSummaryReport(totalDonors, totalDonations, donorTypes, typeTotals);
 
+    }
+
+    private void generateReport() {
+        generateReport(donorUI.displayReportMenu());
+    }
+
+    private void generateReport(int choice) {
+        switch (choice) {
+            case 1:
+                generateDonorOverviewReport();
+                break;
+            case 2:
+                generateDonorDemographicsReport();
+                break;
+            case 3:
+                generateDonorTypeBreakdown();
+                break;
+            case 4:
+                generateYearlyDonorStatistics();
+                break;
+            case 5:
+                System.out.println("Exiting report menu.");
+                break;
+            default:
+                System.out.println("Invalid choice. Please select a valid option.");
+        }
+    }
+
+    private void generateDonorOverviewReport() {
+        // Implement your logic to generate Donor Overview Report
+        System.out.println("Generating Donor Overview Report...");
+        // Example output, replace with actual report generation logic
+        System.out.println("Total Donors: " + donorList.size());
+        // Add more details as needed
+    }
+
+    private void generateDonorDemographicsReport() {
+        // Implement your logic to generate Donor Demographics Report
+        System.out.println("Generating Donor Demographics Report...");
+        // Example output, replace with actual report generation logic
+    }
+
+    private void generateDonorTypeBreakdown() {
+ int individual = 0;
+        int government = 0;
+        int foundation = 0;
+        int organization = 0;
+        donorUI.printDonorList(donorList);
+        System.out.println(donorList.size());
+        for (int i = 0; i < donorList.size(); i++) {
+            if (donorList.getEntry(i).getDonorType().equalsIgnoreCase("Individual")) {
+                individual++;
+                continue;
+            }
+            if (donorList.getEntry(i).getDonorType().equalsIgnoreCase("Organization")) {
+                organization++;
+                continue;
+
+            }
+            if (donorList.getEntry(i).getDonorType().equalsIgnoreCase("Foundation")) {
+                foundation++;
+                continue;
+
+            }
+            if (donorList.getEntry(i).getDonorType().equalsIgnoreCase("Government")) {
+                government++;
+                continue;
+
+            }
+        }
+        System.out.println(individual+" "+organization+" "+foundation+" "+government);
+
+        System.out.println("Yearly Donor Statistic");
+        System.out.println("======================");
+        System.out.println("|  Individual  | "+repeatChar('*', individual));
+        
+        System.out.println("| Organization | "+repeatChar('*', organization));
+        
+        System.out.println("|  Foundation  | "+repeatChar('*', foundation));
+        
+        System.out.println("|  Government  | "+repeatChar('*', government));
+        
+        System.out.println();
+    }
+
+    private void generateYearlyDonorStatistics() {
+       
+    }
+
+// Helper method to repeat a character
+    private String repeatChar(char ch, int count) {
+        StringBuilder sb = new StringBuilder(count);
+        for (int i = 0; i < count; i++) {
+            sb.append(ch);
+        }
+        return sb.toString();
     }
 
 }
