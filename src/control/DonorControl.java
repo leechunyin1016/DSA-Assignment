@@ -8,6 +8,7 @@ import adt.SortedDoublyLinkedList;
 import adt.SortedDoublyLinkedListInterface;
 import boundary.DonorUI;
 import dao.DonorInitializer;
+import entity.Donation;
 import entity.Donor;
 import utility.MessageUI;
 
@@ -16,15 +17,15 @@ import utility.MessageUI;
  * @author LEE CHUN YIN
  */
 public class DonorControl {
-
+    
     private SortedDoublyLinkedListInterface<Donor> donorList = new SortedDoublyLinkedList<>();
     private DonorInitializer donorDAO = new DonorInitializer();
     private DonorUI donorUI = new DonorUI();
-
+    
     public DonorControl() {
         donorList = donorDAO.initializeDonors();
     }
-
+    
     public void runDonorMaintenance() {
         int choice = 0;
         do {
@@ -56,12 +57,12 @@ public class DonorControl {
             }
         } while (choice != 7);
     }
-
+    
     public void addNewDonor() {
         Donor newDonor = donorUI.inputDonorDetails();
         donorList.add(newDonor);
     }
-
+    
     private void removeDonor() {
         String donorName = donorUI.inputDonorName();
         for (int i = 0; i < donorList.size(); i++) {
@@ -70,7 +71,7 @@ public class DonorControl {
             }
         }
     }
-
+    
     private void updateDonorDetails() {
         String donorName = donorUI.inputDonorName();
         String donorId = null;
@@ -81,14 +82,14 @@ public class DonorControl {
             }
         }
         Donor donor = donorUI.inputDonorDetails();
-        donor.setDonorId(donorId);
+        donor.setDonorId(donorId); 
         for (int i = 0; i < donorList.size(); i++) {
             if (donorList.getEntry(i).getDonorName().endsWith(donorName)) {
-                donorList.edit(donorList.getEntry(i),donor);
+                donorList.edit(donorList.getEntry(i), donor);
             }
         }
     }
-
+    
     private void searchDonor() {
         String donorName = donorUI.inputDonorName();
         for (int i = 0; i < donorList.size(); i++) {
@@ -97,20 +98,59 @@ public class DonorControl {
             }
         }
     }
-
+    
     private void listAllDonors() {
-        System.out.println("Donor List");
-        System.out.println("==========");
-        donorList.display();
+        donorUI.printDonorList(donorList);
     }
-
-    private void generateDonorSummaryReport() {
-
-    }
-
+    
     public static void main(String[] args) {
         DonorControl donorMaintenance = new DonorControl();
         donorMaintenance.runDonorMaintenance();
     }
+    private void generateDonorSummaryReport() {
+    // Define arrays to keep track of donor type indices and totals
+    String[] donorTypes = {"Individual", "Corporate", "Foundation", "Government"};
+    double[] typeTotals = new double[donorTypes.length];
+
+    // Initialize variables for summary report
+    int totalDonors = donorList.size();
+    double totalDonations = 0.0;
+    
+    // Iterate through each donor and aggregate data
+    for (int i = 0; i < donorList.size(); i++) {
+        Donor donor = donorList.getEntry(i);
+        String donorType = donor.getDonorType();
+        SortedDoublyLinkedListInterface<Donation> donations = donor.getDonations();
+        
+        // Calculate total donations for this donor
+        double donorTotal = 0.0;
+        for (int j = 0; j < donations.size(); j++) {
+            donorTotal += donations.getEntry(j).getAmount();
+        }
+        
+        // Update total donations
+        totalDonations += donorTotal;
+        
+        // Update the typeTotals array based on donorType
+        for (int k = 0; k < donorTypes.length; k++) {
+            if (donorTypes[k].equals(donorType)) {
+                typeTotals[k] += donorTotal;
+                break;
+            }
+        }
+    }
+
+    // Print summary report
+    System.out.println("Donor Summary Report");
+    System.out.println("====================");
+    System.out.println("Total Donors: " + totalDonors);
+    System.out.println("Total Donations: $" + String.format("%.2f", totalDonations));
+    
+    System.out.println("\nDonations by Donor Type");
+    System.out.println("========================");
+    for (int i = 0; i < donorTypes.length; i++) {
+        System.out.printf("%-20s $%.2f\n", donorTypes[i], typeTotals[i]);
+    }
+}
 
 }
