@@ -15,4 +15,8 @@ public class MessageUI {
     System.out.println("\nExiting system");
   }
   
+  public void whatNotFound(String input){
+      System.out.println(input+" Not Found.");
+  }
+  
 }
