@@ -3,52 +3,72 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package entity;
+
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Objects;
+import java.util.Random;
+import entity.Distribution;
+
 /**
  *
  * @author Dephnie
  */
-public class Donee implements Comparable<Donee>{
+public class Donee implements Comparable<Donee> {
+
+    private static final char ORGANIZATION_TYPE = 'O';
+    private static final char FAMILY_TYPE = 'F';
+    private static final char INDIVIDUAL_TYPE = 'I';
+
+    private static final Random random = new Random();
+
     private String doneeID;
     private String doneeName;
     private String doneeContact;
     private String doneeAddress;
-    private String priorityLevel;
-    private String donationReceived;
+    private String priorityLvl;
     private LocalDate dateOfBirth;
-    private LocalDate lastDonationReceivedDate;
     private static int idCounter = 0;
     private int doneeAge;
     private int householdSize;
     private double doneeIncome;
     private char doneeGender;
     private char doneeType;
-    private char eligibility;
+    private boolean eligibility;
+    private Distribution distribution;
 
-    public Donee(String doneeName, String doneeContact, String doneeAddress, String donationReceived, LocalDate dateOfBirth, LocalDate lastDonationReceivedDate, int householdSize, double doneeIncome, char doneeGender, char doneeType, char eligibility) {
-        this.doneeID = generateDoneeID();
+    public Donee(String doneeID, String doneeName, String doneeContact, String doneeAddress, LocalDate dateOfBirth, int doneeAge, int householdSize, String priorityLvl, double doneeIncome, char doneeGender, char doneeType, boolean eligibility) {
+        this.doneeID = doneeID;
         this.doneeName = doneeName;
         this.doneeContact = doneeContact;
         this.doneeAddress = doneeAddress;
-        this.donationReceived = donationReceived;
         this.dateOfBirth = dateOfBirth;
-        this.lastDonationReceivedDate = lastDonationReceivedDate;
+        this.doneeAge = doneeAge;
         this.householdSize = householdSize;
+        this.priorityLvl = priorityLvl;
         this.doneeIncome = doneeIncome;
         this.doneeGender = doneeGender;
         this.doneeType = doneeType;
         this.eligibility = eligibility;
-        this.doneeAge = calculateAge();
-        setDeterminePriorityLevel(); // Set priority level based on doneeIncome and doneeType
+        setDeterminePriorityLevel();
+        this.distribution = new Distribution();
     }
-    
+
+    // Constructor for searching by ID
+    public Donee(String doneeID) {
+        this.doneeID = doneeID;
+    }
+
     public int getDoneeAge() {
         return doneeAge;
     }
 
     public String getDoneeID() {
         return doneeID;
+    }
+
+    public void setDoneeID(String doneeID) {
+        this.doneeID = doneeID;
     }
 
     public String getDoneeName() {
@@ -75,33 +95,13 @@ public class Donee implements Comparable<Donee>{
         this.doneeAddress = doneeAddress;
     }
 
-    public String getPriorityLevel() {
-        return priorityLevel;
-    }
-
-    public String getDonationReceived() {
-        return donationReceived;
-    }
-
-    public void setDonationReceived(String donationReceived) {
-        this.donationReceived = donationReceived;
-    }
-
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-        this.doneeAge = calculateAge();//update age when the dog changes
-    }
-
-    public LocalDate getLastDonationReceivedDate() {
-        return lastDonationReceivedDate;
-    }
-
-    public void setLastDonationReceivedDate(LocalDate lastDonationReceivedDate) {
-        this.lastDonationReceivedDate = lastDonationReceivedDate;
+        this.doneeAge = calculateAge();//update age when the dof changes
     }
 
     public double getDoneeIncome() {
@@ -137,65 +137,77 @@ public class Donee implements Comparable<Donee>{
         this.doneeType = doneeType;
     }
 
-    public char getEligibility() {
+    public boolean isEligibility() {
         return eligibility;
     }
 
-    public void setEligibility(char eligibility) {
+    public void setEligibility(boolean eligibility) {
         this.eligibility = eligibility;
     }
-    
-    private static synchronized String generateDoneeID(){
-        idCounter++;
-        return String.format("DN%04d", idCounter);
+
+    public static synchronized String generateDoneeID() {
+        int randomNum = random.nextInt(10000); // Generate a random number between 0 and 9999
+        return String.format("DN%04d", randomNum); // Format it to be 4 digits with leading zeros if necessary
     }
-    
-    public void setDeterminePriorityLevel(){
-        switch(doneeType){
-            case 'O': //organization
-            if(doneeIncome < 1000000){ //RM1 million
-                priorityLevel = "Low Priority";
-            }else if(doneeIncome > 10000000 ){ //RM10 million
-                priorityLevel = "High Priority";
-            }else{
-                priorityLevel = "Medium Priority";
-            }
-            break;
-            
-            case 'F': //family
-            if(doneeIncome < 4000){
-                priorityLevel = "Low Priority";
-            }else if(doneeIncome > 10000 ){ 
-                priorityLevel = "High Priority";
-            }else{
-                priorityLevel = "Medium Priority";
-            } 
-            break;
-            
-            case 'I': //individual
-            if(doneeIncome < 2000){ 
-                priorityLevel = "Low Priority";
-            }else if(doneeIncome > 6000 ){ 
-                priorityLevel = "High Priority";
-            }else{
-                priorityLevel = "Medium Priority";
-            } 
-            break;   
+
+    public String getPriorityLvl() {
+        return priorityLvl;
+    }
+
+    private void setDeterminePriorityLevel() {
+        switch (doneeType) {
+            case 'O': // organization
+                priorityLvl = doneeIncome > 10000000 ? "Low" : (doneeIncome < 1000000 ? "High" : "Medium");
+                break;
+            case 'F': // family
+                priorityLvl = doneeIncome > 10000 ? "Low" : (doneeIncome < 4000 ? "High" : "Medium");
+                break;
+            case 'I': // individual
+                priorityLvl = doneeIncome > 6000 ? "Low" : (doneeIncome < 2000 ? "High" : "Medium");
+                break;
+            default:
+                priorityLvl = "Low";
         }
     }
-    
-    private int calculateAge(){
-        if(dateOfBirth == null){
+
+    private int calculateAge() {
+        if (dateOfBirth == null) {
             throw new IllegalArgumentException("Date Of Birth cannot be null");
         }
         LocalDate today = LocalDate.now();
         return Period.between(dateOfBirth, today).getYears();
     }
-    
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Donee donee = (Donee) obj;
+        return doneeID.equals(donee.doneeID);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 71 * hash + Objects.hashCode(this.doneeID);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "Donee [doneeID=" + doneeID + ", doneeName=" + doneeName + ", doneeContact=" + doneeContact
+                + ", doneeAddress=" + doneeAddress + ", priorityLevel=" + priorityLvl
+                + ", dateOfBirth=" + dateOfBirth + ", doneeAge=" + doneeAge
+                + ", householdSize=" + householdSize + ", doneeIncome=" + doneeIncome
+                + ", doneeGender=" + doneeGender + ", doneeType=" + doneeType + ", eligibility=" + eligibility + "]";
+    }
+
     @Override
     public int compareTo(Donee other) {
-        // Example: Compare based on priority level or doneeID
-        return this.doneeID.compareTo(other.getDoneeID());
+        return this.doneeID.compareTo(other.doneeID);
     }
-    
 }
